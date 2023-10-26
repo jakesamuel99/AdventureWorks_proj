@@ -56,3 +56,62 @@ The pie charts show us that frame components are scrapped the most, followed by 
 **Challenges:**
 
 - Approximating the values of scrapped items for which I did not have cost data.
+
+## Demand Forecasting
+
+**Objective:**
+
+Bikes and components were the biggest drivers of revenue, so we want to focus on these two product categories for our analysis. We want to accurately forecast demand so that we can prepare for it and meet it as closely as possible to avoid missing orders or holding excess inventory.
+
+**Method:**
+
+Plots of bike/component order quantity vs dates show a complex pattern of large order spikes at a cyclical interval of each month. Initially, I decided to demand forecast using Holt-Winters due to this model’s inclusion of trend and seasonality that is left out in the more basic “simple exponential smoothing” forecasting model. The seasonality component is important due to the presence of the repeating, cyclical pattern of demand spikes. Additionally, there seems to be a trend of increasing demand over time. I set the model’s trend parameter to be “additive” because the demand appears to increase with time, and I set the seasonality parameter to be “multiplicative” because the demand spikes appear to be growing in magnitude over time.
+
+**Holt-Winters’ Steps:**
+
+1. Imported relevant libraries and used sqlalchemy and pandas to query and import orders data into python data frames (after confirming there was no missing data). One data frame for bikes, and one data frame for components.
+2. Created Holt-Winters’ model using “statsmodels” library.
+
+A visual inspection of the Holt-Winters’ model predictions indicated that it did not seem to effectively capture the cyclical demand spike pattern, even after adjusting several of the parameters. For this reason, I decided to develop another model to forecast demand. I opted to implement a random forest model due to the intricate relationships, seasonality, and interactions.
+
+**Random Forest Steps:**
+
+1. Modified bike and component data frames to have “lag features” and “binary” feature columns.
+2. Organized data into Input Features (X) and Target Variable (y).
+3. Split the data into training and testing sets.
+4. Trained random forest model using “sklearn” library.
+5. Created a data frame of predictions, as well as 90% confidence interval prediction bounds.
+6. Plotted results and validated performance.
+
+**Analysis:**
+
+These charts illustrate that the random forest model much better captures the dynamic demand spikes and fluctuations than the Holt-Winters model. While it may be difficult to see in the plots, the actual demand is accurately captured, 90% of the time, in the prediction interval.
+
+The MAE, MSE, and RMSE were all calculated to assess performance. With more time, I would create and compare other models, and optimize parameters to minimize these error metrics and choose the best-performing model and parameters to forecast demand.
+
+**Challenges:**
+
+- Time constraints limiting how many models can be developed, tested, and optimized.
+
+### Safety Stock and Reorder Point for Bikes
+
+Due to the large variability of demand between any given day each month versus the sales spikes at the beginning/end of each month, I decided to segment my safety stock and reorder point calculations. I calculated the safety stock and reorder point for any typical day during the months by excluding the dates of sales spikes from my calculations of demand average and demand variance.
+
+I determined the safety stock and reorder points of bikes as an average instead of for each individual type of bike. To do this, I calculated the lead time average and lead time standard deviation for each type of bike. Then, I found the average of all the lead times, and the root sum of squares of all the standard deviations. I defined that I want a 95% service level and then used the “King’s Method” for calculating the safety stock.
+
+**For standard monthly operations of bikes:**
+- The average safety stock value is 97.
+- The reorder point is 413.
+
+An EOQ model can be used to determine the quantity of orders to make when hitting the reorder point. However, we would need to have information on ordering and holding costs, which we do not have, to develop the EOQ model.
+
+In addition to standard day-to-day safety stock and reorder points outlined above, a dynamic replenishment strategy can be used specifically for the days leading up to the end of the month when the spikes occur. Due to the lead time variability of bike manufacturing, we need to define what is more important: having a high service level or minimizing holding costs. If we decide that we want to prioritize service level at the expense of increased holding costs, there are two steps we need to take. The first is to use the demand forecasting model to determine on which date and how many orders we expect there to be. The upper bounds of the forecast should be used to ensure enough inventory is ordered. The second step is to identify the probability, i.e., 99%, that we want to receive those orders on time. This probability is needed to identify a z-score. Then, the z-score, average lead time, and standard deviation lead time are all used to calculate how many days in advance we need to place the order before the spike.
+
+**Key Business Insights and Recommendations:**
+
+- Focus marketing and inventory efforts on high-revenue categories like bikes and components. These categories make up only half of orders but are 97% of all revenue.
+- Plan inventory and marketing strategies around the monthly sales spikes, ensuring sufficient stock during these periods.
+- Explore the reasons behind low revenue from clothing and accessories, and consider strategic adjustments. These categories make up 3% of all revenue but are half of all orders.
+- Investigate and improve the production processes for mountain bikes, road bikes, frame components, and seat assemblies to reduce scrap rates. These are the most frequent and costly items scrapped.
+- Identify and address bottlenecks in bike production. These are the biggest drivers of revenue but have the highest percentage of late manufacturing work orders.
+- Invest in fine-tuning and optimizing demand forecasting models to minimize error metrics. This will enable the best demand predictions so that supply can be allocated accordingly.
