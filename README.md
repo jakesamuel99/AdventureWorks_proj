@@ -107,7 +107,7 @@ An EOQ model can be used to determine the quantity of orders to make when hittin
 
 In addition to standard day-to-day safety stock and reorder points outlined above, a dynamic replenishment strategy can be used specifically for the days leading up to the end of the month when the spikes occur. Due to the lead time variability of bike manufacturing, we need to define what is more important: having a high service level or minimizing holding costs. If we decide that we want to prioritize service level at the expense of increased holding costs, there are two steps we need to take. The first is to use the demand forecasting model to determine on which date and how many orders we expect there to be. The upper bounds of the forecast should be used to ensure enough inventory is ordered. The second step is to identify the probability, i.e., 99%, that we want to receive those orders on time. This probability is needed to identify a z-score. Then, the z-score, average lead time, and standard deviation lead time are all used to calculate how many days in advance we need to place the order before the spike.
 
-**Key Business Insights and Recommendations:**
+## Key Business Insights and Recommendations
 
 - Focus marketing and inventory efforts on high-revenue categories like bikes and components. These categories make up only half of orders but are 97% of all revenue.
 - Plan inventory and marketing strategies around the monthly sales spikes, ensuring sufficient stock during these periods.
