@@ -26,7 +26,7 @@ The AdventureWorks database contains data from a sample bicycle manufacturer and
 
 This database was designed for MS SQL Server, but I imported it into Postgres using [this](https://github.com/lorint/AdventureWorks-for-Postgres) Gitub guide.
 
-## Sales Analysis Dashboard
+## [Sales Analysis Dashboard](https://public.tableau.com/app/profile/jacob.lilienfeld/viz/SalesDashboard-IODF/SalesDashboard)
 
 ![](https://github.com/jakesamuel99/AdventureWorks_proj/blob/main/images/IODF_sales_dashboard.png)
 
@@ -45,7 +45,7 @@ We can also see a very strong, and important pattern - that there are large sale
 - Importing the data non-native to Postgres (compatibility issues).
 - Creating the complex cross-join query to add new rows for categories with 0 sales on days during the date range.
 
-## Production Analysis Dashboard
+## [Production Analysis Dashboard](https://public.tableau.com/app/profile/jacob.lilienfeld/viz/ProductionDashboard-IODF/ProductionDashboard)
 
 ![](https://github.com/jakesamuel99/AdventureWorks_proj/blob/main/images/IODF_production_dashboard.png)
 
