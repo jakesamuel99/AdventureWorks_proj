@@ -24,7 +24,7 @@ Adventure Works Cycles, a sample bicycle manufacturer and seller, sought to enha
 
 The AdventureWorks database contains data from a sample bicycle manufacturer and seller (Adventure Works Cycles). The main schema includes Manufacturing, Sales, Purchasing, Product Management, Contact Management, and Human Resources.
 
-This database was designed for MS SQL Server, but I imported it into Postgres using LINK.
+This database was designed for MS SQL Server, but I imported it into Postgres using [this](https://github.com/lorint/AdventureWorks-for-Postgres) Gitub guide.
 
 ## Sales Analysis Dashboard
 
