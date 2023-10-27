@@ -1,0 +1,51 @@
+WITH date_series AS (
+    SELECT
+        d::date AS orderdate
+    FROM
+        generate_series(
+            '2011-05-31'::date,  -- Start date
+            '2014-05-30'::date,  -- End date
+            '1 day'::interval    -- Interval (1 day)
+        ) d
+)
+
+SELECT
+    ds.orderdate,
+    COALESCE(ROUND(SUM(c.subtotal), 0), 1e-6) AS totalsalesvalue,
+	COALESCE(ROUND(SUM(c.orderqty), 0), 1e-6) AS totalorders
+	
+	
+FROM
+    date_series ds
+LEFT JOIN (
+    -- Your existing subquery for the "Bike" category
+    SELECT
+        SALES.SALESORDERDETAIL.salesorderid,
+        SALES.SALESORDERDETAIL.salesorderdetailid,
+        SALES.SALESORDERDETAIL.PRODUCTID,
+        PRODUCTION.PRODUCTSUBCATEGORY.PRODUCTCATEGORYID,
+        PRODUCTION.PRODUCT.PRODUCTSUBCATEGORYID,
+        orderqty,
+        unitprice,
+        (orderqty * unitprice) AS subtotal,
+        SALES.SALESORDERHEADER.territoryid,
+        SALES.SALESTERRITORY.NAME,
+        orderdate
+    FROM
+        SALES.SALESORDERDETAIL
+    FULL OUTER JOIN SALES.SALESORDERHEADER ON
+        SALES.SALESORDERDETAIL.SALESORDERID = SALES.SALESORDERHEADER.SALESORDERID
+    FULL OUTER JOIN SALES.SALESTERRITORY ON
+        SALES.SALESTERRITORY.TERRITORYID = SALES.SALESORDERHEADER.TERRITORYID
+    JOIN PRODUCTION.PRODUCT ON
+        SALES.SALESORDERDETAIL.PRODUCTID = PRODUCTION.PRODUCT.PRODUCTID
+    JOIN PRODUCTION.PRODUCTSUBCATEGORY ON
+        PRODUCTION.PRODUCT.PRODUCTSUBCATEGORYID = PRODUCTION.PRODUCTSUBCATEGORY.PRODUCTSUBCATEGORYID
+    WHERE PRODUCTCATEGORYID = 1 -- Limits to Bike
+) AS c
+ON
+    ds.orderdate = c.orderdate
+GROUP BY
+    ds.orderdate
+ORDER BY
+    ds.orderdate ASC;
