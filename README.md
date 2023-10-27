@@ -47,6 +47,8 @@ We can also see a very strong, and important pattern - that there are large sale
 
 ## Production Analysis Dashboard
 
+![](https://github.com/jakesamuel99/AdventureWorks_proj/blob/main/images/IODF_production_dashboard.png)
+
 **Methods:**
 
 Similar method as used in creating the Sales Analysis dashboard. I created some new features "on_time" (Boolean, TRUE if end date <= due date) and "days_late" (production end date – due date), which are important for understanding production operations. Many items produced did not have an associated category, so in my query, I separated those items into newly created subcategories based on each item’s name. Additionally, many scrapped items, such as "ball bearings" and "hub caps," did not have any cost data. Therefore, I had to approximate the values of these scrapped items using online price data and looking at input material costs for these products on the "billofmaterials" table of the AdventureWorks dataset. I used conservative numbers when approximating the values of these scrapped items. I exported the query outputs to CSVs, which I then imported into Tableau to create the visualizations.
@@ -74,6 +76,8 @@ Plots of bike/component order quantity vs dates show a complex pattern of large 
 1. Imported relevant libraries and used sqlalchemy and pandas to query and import orders data into python data frames (after confirming there was no missing data). One data frame for bikes, and one data frame for components.
 2. Created Holt-Winters’ model using “statsmodels” library.
 
+![](https://github.com/jakesamuel99/AdventureWorks_proj/blob/main/images/IODF_holt.png)
+
 A visual inspection of the Holt-Winters’ model predictions indicated that it did not seem to effectively capture the cyclical demand spike pattern, even after adjusting several of the parameters. For this reason, I decided to develop another model to forecast demand. I opted to implement a random forest model due to the intricate relationships, seasonality, and interactions.
 
 **Random Forest Steps:**
@@ -86,6 +90,12 @@ A visual inspection of the Holt-Winters’ model predictions indicated that it d
 6. Plotted results and validated performance.
 
 **Analysis:**
+
+Below are 3 charts, showing the predictions vs actual on the test data in periods where there are sales spikes, another showing a sample of the predictions vs actual on the test data in the middle of a month, and the last showing a forecast of future demand beyond the test data, respectively.
+
+![](https://github.com/jakesamuel99/AdventureWorks_proj/blob/main/images/IODF_rf_test.png)
+![](https://github.com/jakesamuel99/AdventureWorks_proj/blob/main/images/IODF_rf_month.png)
+![](https://github.com/jakesamuel99/AdventureWorks_proj/blob/main/images/IODF_rd_predict.png)
 
 These charts illustrate that the random forest model much better captures the dynamic demand spikes and fluctuations than the Holt-Winters model. While it may be difficult to see in the plots, the actual demand is accurately captured, 90% of the time, in the prediction interval.
 
@@ -100,6 +110,9 @@ The MAE, MSE, and RMSE were all calculated to assess performance. With more time
 Due to the large variability of demand between any given day each month versus the sales spikes at the beginning/end of each month, I decided to segment my safety stock and reorder point calculations. I calculated the safety stock and reorder point for any typical day during the months by excluding the dates of sales spikes from my calculations of demand average and demand variance.
 
 I determined the safety stock and reorder points of bikes as an average instead of for each individual type of bike. To do this, I calculated the lead time average and lead time standard deviation for each type of bike. Then, I found the average of all the lead times, and the root sum of squares of all the standard deviations. I defined that I want a 95% service level and then used the “King’s Method” for calculating the safety stock.
+
+![](https://github.com/jakesamuel99/AdventureWorks_proj/blob/main/images/IODF_formula1.png)
+![](https://github.com/jakesamuel99/AdventureWorks_proj/blob/main/images/IODF_formula2.png)
 
 **For standard monthly operations of bikes:**
 - The average safety stock value is 97.
