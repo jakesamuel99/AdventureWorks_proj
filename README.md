@@ -28,6 +28,8 @@ This database was designed for MS SQL Server, but I imported it into Postgres us
 
 ## Sales Analysis Dashboard
 
+![](https://github.com/jakesamuel99/AdventureWorks_proj/blob/main/images/IODF_sales_dashboard.png)
+
 **Methods:**
 
 I executed several complex queries in Postgres to join columns from tables containing sales information, product information, and region information. The goal was to capture all relevant information while keeping the data size minimal. There were gaps in the sales data for certain product categories on specific dates due to there being no sales for that product category on those respective dates (fair assumption). As part of a query, I used a cross join to ensure that every day had a sales quantity for each of the respective categories. For example, if there were no sales of clothing on a particular day, then a new row was added with Category = clothing, Quantity = 0. This was critical for producing an accurate chart of sales quantity vs date. The resulting SQL output data size was small, so I exported the output to a CSV, which I then imported into Tableau to create the visualizations.
