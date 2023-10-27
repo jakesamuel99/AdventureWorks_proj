@@ -1,1 +1,1 @@
-The following is the python code and sql queries used for this project.
+This folder contains the python code and sql queries used for this project.
